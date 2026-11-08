@@ -1,0 +1,24 @@
+name: Build
+on:
+  push:
+  workflow_dispatch:
+defaults:
+  run:
+    working-directory: Chat-rank
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter create . --platforms=android --project-name chat_rank --org com.example
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build apk --debug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chat_rank-debug-apk
+          path: Chat-rank/build/app/outputs/flutter-apk/app-debug.apk
